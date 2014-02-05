@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:pop3s="http://www.mulesoft.org/schema/mule/pop3s" xmlns:pop3="http://www.mulesoft.org/schema/mule/pop3" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp" xmlns:smtps="http://www.mulesoft.org/schema/mule/smtps" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
+http://www.mulesoft.org/schema/mule/smtps http://www.mulesoft.org/schema/mule/smtps/current/mule-smtps.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/pop3 http://www.mulesoft.org/schema/mule/pop3/current/mule-pop3.xsd
+http://www.mulesoft.org/schema/mule/pop3s http://www.mulesoft.org/schema/mule/pop3s/current/mule-pop3s.xsd">
+    <flow name="Receive_email_flow" doc:name="Receive_email_flow">
+        <pop3s:inbound-endpoint host="${pop3.host}" port="${pop3.port}" user="${user.username}" password="${user.password}" responseTimeout="10000" doc:name="POP3"/>
+        <file:outbound-endpoint path="${file.incoming}" responseTimeout="10000" doc:name="File"/>
+    </flow>
+    <flow name="Send_email_flow" doc:name="Send_email_flow">
+        <file:inbound-endpoint path="${file.outgoing}" responseTimeout="10000" doc:name="File"/>
+        <smtps:outbound-endpoint host="${smtp.host}" port="${smtp.port}" user="${user.username}" password="${user.password}" to="jbuusao@gmail.com" from="mule.jpbstest1@gmail.com" subject="Test" responseTimeout="10000" doc:name="SMTP"/>
+    </flow>
+</mule>
