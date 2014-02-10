@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="amqp_demo">
+    <global-element name="AMQP Connector" type="http://www.mulesoft.org/schema/mule/amqp/connector" entity-id="AMQP Connector#1">
+        <properties>
+            <property name="port"/>
+            <property name="fallbackAddresses"/>
+            <property name="activeDeclarationsOnly"/>
+            <property name="host"/>
+            <property name="mandatory"/>
+            <property name="deliveryMode"/>
+            <property name="validateConnections" value="true"/>
+            <property name="defaultReturnEndpointBuilder-ref"/>
+            <property name="password"/>
+            <property name="exclusiveConsumers"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="immediate"/>
+            <property name="username"/>
+            <property name="defaultReturnListener-ref"/>
+            <property name="prefetchSize"/>
+            <property name="ackMode"/>
+            <property name="virtualHost"/>
+            <property name="priority"/>
+            <property name="prefetchCount"/>
+            <property name="name" value="AMQP_Connector"/>
+            <property name="dynamicNotification"/>
+            <property name="noLocal"/>
+            <property name="auxiliary;index" value="1"/>
+        </properties>
+    </global-element>
+    <global-element name="Ajax" type="org.mule.tooling.ui.modules.core.global.ajaxConnector" entity-id="Ajax#1">
+        <properties>
+            <property name="maxInterval"/>
+            <property name="jsonCommented" value="true"/>
+            <property name="interval"/>
+            <property name="logLevel"/>
+            <property name="name" value="Ajax"/>
+            <property name="refsThreshold"/>
+            <property name="disableReplyTo"/>
+            <property name="multiFrameInterval"/>
+            <property name="resourceBase" value="${app.home}/www"/>
+            <property name="auxiliary;index" value="2"/>
+            <property name="timeout"/>
+            <property name="serverUrl" value="http://localhost:8081/amqp"/>
+        </properties>
+    </global-element>
+    <global-element name="AMQP Connector" type="http://www.mulesoft.org/schema/mule/amqp/connector" entity-id="AMQP Connector#2">
+        <properties>
+            <property name="port"/>
+            <property name="fallbackAddresses"/>
+            <property name="activeDeclarationsOnly"/>
+            <property name="host"/>
+            <property name="mandatory"/>
+            <property name="deliveryMode"/>
+            <property name="validateConnections" value="true"/>
+            <property name="defaultReturnEndpointBuilder-ref"/>
+            <property name="password"/>
+            <property name="exclusiveConsumers"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="immediate"/>
+            <property name="username"/>
+            <property name="defaultReturnListener-ref"/>
+            <property name="prefetchSize"/>
+            <property name="ackMode"/>
+            <property name="virtualHost"/>
+            <property name="priority"/>
+            <property name="prefetchCount"/>
+            <property name="name" value="AMQP_Connector1"/>
+            <property name="dynamicNotification"/>
+            <property name="noLocal"/>
+            <property name="auxiliary;index" value="3"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="Sending_flow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="0575b901-124f-493d-a90b-d1de5db29d66">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="4"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="OneWay" name="/amqp/send" type="org.mule.tooling.ui.modules.core.ajax.AJAX" entity-id="Ajax#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="businessEventsLabel"/>
+                    <property name="messageCacheSize"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="one-way"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="cacheMessages"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="channel" value="/amqp/send"/>
+                    <property name="auxiliary;index" value="5"/>
+                    <property name="responseTimeout" value="10000"/>
+                    <property name="mimeType"/>
+                    <property name="connector-ref" value="Ajax"/>
+                </properties>
+            </endpoint>
+            <endpoint direction="Outbound" message-exchange-pattern="RequestResponse" name="AMQP Sender" type="http://www.mulesoft.org/schema/mule/amqp/endpoint" entity-id="AMQP#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="businessEventsLabel"/>
+                    <property name="exchangeName"/>
+                    <property name="queueAutoDelete"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchangeType"/>
+                    <property name="exchangeAutoDelete"/>
+                    <property name="queueExclusive"/>
+                    <property name="exchange-pattern"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="routingKey"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="queueDurable"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="queueName" value="test"/>
+                    <property name="consumerTag"/>
+                    <property name="exchangeDurable"/>
+                    <property name="auxiliary;index" value="6"/>
+                    <property name="mimeType" value="text/plain"/>
+                    <property name="responseTimeout" value="10000"/>
+                    <property name="connector-ref" value="AMQP_Connector1"/>
+                </properties>
+            </endpoint>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="Listening_flow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="b86cf5c2-42ea-4a47-bfb5-1b0e1af98720">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="7"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="AMQP Listener" type="http://www.mulesoft.org/schema/mule/amqp/endpoint" entity-id="AMQP#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="businessEventsLabel"/>
+                    <property name="exchangeName"/>
+                    <property name="queueAutoDelete"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchangeType"/>
+                    <property name="exchangeAutoDelete"/>
+                    <property name="queueExclusive"/>
+                    <property name="exchange-pattern"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="routingKey"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="queueDurable"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="queueName" value="test"/>
+                    <property name="consumerTag"/>
+                    <property name="exchangeDurable"/>
+                    <property name="auxiliary;index" value="8"/>
+                    <property name="mimeType" value="text/plain"/>
+                    <property name="responseTimeout" value="10000"/>
+                    <property name="connector-ref" value="AMQP_Connector1"/>
+                </properties>
+            </endpoint>
+            <pattern name="Byte Array to Object" type="http://www.mulesoft.org/schema/mule/core/byte-array-to-object-transformer" entity-id="Byte Array to Object#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="returnClass" value="java.lang.String"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="auxiliary;index" value="9"/>
+                    <property name="mimeType"/>
+                </properties>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="message" value="Received #[payload]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="10"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+</mule-configuration>

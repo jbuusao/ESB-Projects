@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:amqp="http://www.mulesoft.org/schema/mule/amqp" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ajax="http://www.mulesoft.org/schema/mule/ajax" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amqp/current/mule-amqp.xsd
+http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <amqp:connector name="AMQP_Connector" validateConnections="true" doc:name="AMQP Connector"/>
+    <ajax:connector name="Ajax" serverUrl="http://localhost:8081/amqp" resourceBase="${app.home}/www" jsonCommented="true" doc:name="Ajax"/>
+    <amqp:connector name="AMQP_Connector1" validateConnections="true" doc:name="AMQP Connector"/>
+    <flow name="Sending_flow" doc:name="Sending_flow">
+        <ajax:inbound-endpoint channel="/amqp/send" responseTimeout="10000" connector-ref="Ajax"  doc:name="/amqp/send"/>
+        <amqp:outbound-endpoint queueName="test" responseTimeout="10000" connector-ref="AMQP_Connector1" doc:name="AMQP Sender" mimeType="text/plain"/>
+    </flow>
+    <flow name="Listening_flow" doc:name="Listening_flow">
+        <amqp:inbound-endpoint queueName="test" responseTimeout="10000" mimeType="text/plain" connector-ref="AMQP_Connector1" doc:name="AMQP Listener"/>
+        <byte-array-to-object-transformer returnClass="java.lang.String" doc:name="Byte Array to Object"/>
+        <logger message="Received #[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>
